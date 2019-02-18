@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        button {
+            margin: 10px;
+            width: 126px;
+            height: 44px;
+            outline: none;
+            background: none;
+            border:none;
+            color: #fff;
+            font-family: '楷体';
+            box-shadow: 5px 5px 2px 0px #999;
+            font-size: 18px;
+        }
+
+        .get{
+          background: green;
+        }
+
+        .post{
+          background: red;
+        }
+        .get.gray{
+            background: #fff;
+        }
+        .post.gray{
+            background: #fff;
+        }
+    </style>
+</head>
+
+<body>
+  <button id="videoUrl" class="get">视频路径</button>
+  
+    <button id="order" class="get">查询订单</button>
+    <button id="vendor" class="get">查询库存</button>
+    <button id="openDoorMsg" class="get">查询开门信息</button>
+    <button id="vendorDetail" class="get ">查询设备</button>
+     <button id="skusList" class="get ">查询全部商品</button>
+    <button id="plants" class="get ">查询货道</button>
+
+    <button id="openDoor" class="post">开门</button>
+    <button id="addVendor" class="post ">设备注册</button>
+    <button id="deleteVendor" class="post">设备注销</button>
+    <button id="skusCode" class="post ">商品对码</button>
+    <button id="plantsChange" class="post">货道设置</button>
+    <button id="stocksChange" class="post">库存同步</button>
+</body>
+
+</html>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    // axios.defaults.baseURL = 'http://testopen.51teatime.com';
+    axios.defaults.baseURL =  'http://localhost:8281';
+    axios.defaults.headers = { "Authorization": sessionStorage.getItem('teatimechangetoken') }
+//http://teatime-video.http/object-name?OSSAccessKeyId=LTAIKyndfbXb9TOY&Expires=1547456766&Signature=OMYp4umkGwBVMjlNqvztS0y2u9Q%3D
+
+var videoUrl = document.getElementById('videoUrl');
+    videoUrl.onclick = function () {
+      axios.get('/api/v1/orders/videos?orderId=58774').then(res => {
+          console.log(res)
+      })
+    }
+
+
+    var order = document.getElementById('order');
+    order.onclick = function () {
+      axios.get('/api/v1/orders?orderId=58774').then(res => {
+          console.log(res)
+      })
+    }
+
+    let timestamp=new Date().getTime();
+    var vendor = document.getElementById('vendor');
+    vendor.onclick = function(){
+        axios.get('/api/v1/stocks?vendorId=1326&&stockType=1').then(res => {
+            console.log(res)
+        })
+    }
+
+      var vendorDetail = document.getElementById('vendorDetail');
+    vendorDetail.onclick = function(){
+        axios.get('/api/v1/vendors?vendorDid=05dcff303539594d43046705&&snCode=S18A999').then(res => {
+            console.log(res)
+        })
+    }
+     var deleteVendor = document.getElementById('deleteVendor');
+     deleteVendor.onclick = function(e){
+        axios.delete('/api/v1/vendors?vendorId=1430').then(res => {
+            console.log(res)
+        })
+    }
+
+
+
+    var openDoor = document.getElementById('openDoor');
+    openDoor.onclick = function(e){
+        axios.post('/api/v1/door/open', {
+            thirdUserId: '1111',
+            actType: 2,   //1、补货   2、用户
+            vendorId: 1405,
+            thirdTradeNo:'11'
+        }).then(res => {
+            console.log(res)
+        })
+    }
+
+    var addVendor = document.getElementById('addVendor');
+     addVendor.onclick = function(e){
+        axios.post('/api/v1/vendors', {
+            abbrAddress: '住邦2000',
+            address	: '八里庄西里',
+            attName	: '王浩',
+            attPhone : '15201462260',
+            bdName	: '陈宇琦',
+            bdPhone	: '15201462260',
+            cityId	: 110100,
+            districtId	: 110105,
+            memo	: '开放平台开发正式测试柜',
+            provinceId: 110000,
+            recType	: 2,
+            vendorDid: '05d7ff3933051111111',
+            snCode:'WANGHAO2',
+            doorStructure :1
+        }).then(res => {
+            console.log(res)
+        })
+    }
+
+//  356青梅绿茶
+
+    var skusCode = document.getElementById('skusCode');
+     skusCode.onclick = function(e){
+        axios.post('/api/v1/skus/code', {
+          // skus:[
+            //{
+           //     productSkuId: 419,//香草苏打水
+           //     thirdProductSkuId: "可比克薯片"
+           // }
+
+            //,
+            // {
+            //     productSkuId: 320,
+            //     thirdProductSkuId: "wanghao7777777"
+            // },
+            // {
+            //     productSkuId: 356,
+            //     thirdProductSkuId: "wanghao888888"
+            // },
+            // {
+            //     productSkuId: 1014,
+            //     thirdProductSkuId: "wanghao9999999"
+            // },
+            // {
+            //     productSkuId: 462,
+            //     thirdProductSkuId: "wanghao1010101"
+            // }
+           // ]
+        }).then(res => {
+            console.log(res)
+        })
+    }
+     var plants = document.getElementById('plants');
+    plants.onclick = function () {
+        axios.get('/api/v1/vendors/plants?vendorId=1326').then(res => {
+            console.log(res)
+        })
+    }
+    //已传入为准
+    var plantsChange = document.getElementById('plantsChange');
+     plantsChange.onclick = function(e){
+        axios.post('/api/v1/vendors/plants', {
+            vendorId:1326,
+            plantInfos:[ { plantId: 51927,
+               plantName: '3-1',
+               sensorId: 1020,
+               skus: {
+                count: 1,
+                productName: 'wanghao',
+                productSkuId: null,
+                thirdProductSkuId: null} },
+             { plantId: 51928,
+               plantName: '3-2',
+               sensorId: 1021,
+               skus: {
+                count: null,
+                productName: null,
+                productSkuId: null,
+                thirdProductSkuId: null} },
+             { plantId: 51917,
+               plantName: '4-1',
+               sensorId: 1010,
+               skus: {
+                count: null,
+                productName: null,
+                productSkuId: null,
+                thirdProductSkuId: null} },
+             { plantId: 51918,
+               plantName: '4-2',
+               sensorId: 1011,
+               skus: {
+                count: null,
+                productName: null,
+                productSkuId: null,
+                thirdProductSkuId: null} },
+             { plantId: 51907,
+               plantName: '5-1',
+               sensorId: 1000,
+               skus: {
+                count: null,
+                productName: null,
+                productSkuId: null,
+                thirdProductSkuId: null} },
+             { plantId: 51908,
+               plantName: '5-2',
+               sensorId: 1001,
+               skus: {
+                count: null,
+                productName: null,
+                productSkuId: null,
+                thirdProductSkuId: null} }
+            ]
+
+
+
+
+
+        }).then(res => {
+            console.log(res)
+        })
+    }
+    //设置库存
+    var stocksChange = document.getElementById('stocksChange');
+     stocksChange.onclick = function(e){
+        axios.post('/api/v1/stocks', {
+        vendorId:1430,
+          plantInfos:[
+            {
+            count:3,
+            plantId: 51927,
+            productName:'屈臣氏香草味苏打水',
+            productSkuId:915,
+            thirdProductSkuId:'915香草苏打水'
+          }
+          // ,
+          // {
+          //   count:1,
+          //   plantId:48430,
+          //   productName:'乐事薯片原味',
+          //   productSkuId:'238',
+          //   thirdProductSkuId:'wanghao6666666'
+          // },{
+          //   count:1,
+          //   plantId:48431,
+          //   productName:'雪碧',
+          //   productSkuId:'320',
+          //   thirdProductSkuId:'wanghao7777777'
+          // }, {
+          //   count:1,
+          //   plantId:48419,
+          //   productName:'青梅绿茶',
+          //   productSkuId:'356',
+          //   thirdProductSkuId:'wanghao8888888'
+          // }, {
+          //   count:1,
+          //   plantId:48420,
+          //   productName:'屈臣氏苏打水',
+          //   productSkuId:'1014',
+          //   thirdProductSkuId:'wanghao9999999'
+          // }, {
+          //   count:1,
+          //   plantId:48409,
+          //   productName:'康师傅红烧牛肉面',
+          //   productSkuId:'462',
+          //   thirdProductSkuId:'wanghao1010101'
+          // }
+           ]
+
+        }).then(res => {
+            console.log(res)
+        })
+    }
+
+
+
+
+
+    var openDoorMsg = document.getElementById('openDoorMsg');
+    openDoorMsg.onclick = function(){
+        axios.get('/api/v1/door/open?thirdTradeNo=测试1228').then(res => {
+            console.log(res)
+        })
+    }
+
+    var skusList = document.getElementById('skusList');
+    skusList.onclick = function (e) {
+// thirdProductSkuId  wanghao5555555   productSkuId  56
+        var object = {
+            // pageNo: 1,
+            // pageSize: 5,
+            // productSkuId: 419,
+            // thirdProductSkuId:'915香草苏打水',
+            // productName: "王中王"
+
+
+        }
+
+        var url = '/api/v1/skus?';
+
+        for (var i in object) {
+            if (object[i] != '' && object[i] != null && object[i] != undefined) {
+                url += i + '=' + object[i] + '&';
+            }
+        }
+
+        url = url.slice(0, url.length - 1);
+
+        axios.get(url).then(res => {
+            console.log(res)
+        })
+    }
+
+
+</script>

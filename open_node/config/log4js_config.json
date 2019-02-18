@@ -1,0 +1,66 @@
+{
+  "appenders": {
+    "console": {
+      "type": "console"
+    },
+    "trace": {
+      "type": "file",
+      "filename": "logs/access.log",
+      "maxLogSize ": 1024,
+      "backups": 100,
+      "category": "trace"
+    },
+    "http": {
+      "type": "logLevelFilter",
+      "appender": "trace",
+      "level": "trace",
+      "maxLevel": "trace"
+    },
+    "info": {
+      "category": "log_info",
+      "type": "dateFile",
+      "filename": "logs/app-info.log",
+      "alwaysIncludePattern": true,
+      "pattern": ".yyyy-MM-dd",
+      "layout": {
+        "type": "pattern",
+        "pattern": "[%d{ISO8601}][%5p  %z  %c] %m"
+      },
+      "compress": true
+    },
+    "error": {
+      "category": "log_error",
+      "type": "dateFile",
+      "filename": "logs/app-error.log",
+      "alwaysIncludePattern": true,
+      "pattern": ".yyyy-MM-dd",
+      "layout": {
+        "type": "pattern",
+        "pattern": "[%d{ISO8601}][%5p  %z  %c] %m"
+      },
+      "compress": true
+    },
+    "maxInfo": {
+      "type": "logLevelFilter",
+      "appender": "info",
+      "level": "debug",
+      "maxLevel": "info"
+    },
+    "minError": {
+      "type": "logLevelFilter",
+      "appender": "error",
+      "level": "error"
+    }
+  },
+  "categories": {
+    "default": {
+      "appenders": [
+        "console",
+        "http",
+        "maxInfo",
+        "minError"
+      ],
+      "level": "all"
+    }
+  }
+}

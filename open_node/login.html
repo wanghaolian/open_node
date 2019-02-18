@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .login {
+            position: absolute;
+            top: -260px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            text-align: center;
+            ;
+            width: 500px;
+            height: 80px;
+        }
+
+        .login>p {
+            line-height: 64px;
+        }
+
+        input {
+            width: 280px;
+            height: 34px;
+            outline: none;
+            padding-left: 8px;
+        }
+
+        #loginBtn {
+            width: 56px;
+            height: 34px;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login">
+        <p>
+            <span>账号：</span>
+            <input type="text" id="admin">
+        </p>
+        <p>
+            <span>密码：</span>
+            <input type="password" id="psd">
+        </p>
+        <p>
+            <button id="loginBtn">登录</button>
+            <button id="healthCheck">检测</button>
+        </p>
+    </div>
+</body>
+</html>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    //  axios.defaults.baseURL = 'http://testopen.51teatime.com';
+    axios.defaults.baseURL =  'http://localhost:8281';
+
+    axios.defaults.headers = { "Content-Type": "application/json;charset=utf-8" }
+
+    var login = document.getElementById('loginBtn')
+
+    login.onclick = function () {
+        var appId = $('#admin').val();
+        var appSecret = $('#psd').val();
+        console.log(appId)
+        axios.post('/api/v1/auth', {
+            // 20180917172024924
+                              //20180926170654338
+            "appId": appId,
+            "appSecret": appSecret,
+        }).then(res => {
+            if (res.data.result.code == 0) {
+                alert(res.data.result.msg)
+                sessionStorage.setItem('teatimechangetoken', res.data.accessToken); // 存储token
+                console.log(res.data.accessToken)
+                location.href = 'index.html'
+            } else {
+                alert(res.data.result.msg)
+            }
+        })
+    }
+    healthCheck.onclick = function () {
+        axios.get('/healthCheck/health').then(res => {
+            console.log(res)
+        })
+    }
+</script>
